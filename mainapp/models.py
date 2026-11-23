@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -8,7 +9,10 @@ class User(models.Model):
     city = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=255)
     profile_description = models.TextField()
-    password = models.CharField(max_length=255)
+    account = models.OneToOneField(
+        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.CASCADE,
+        related_name="caregiver_profile",
+    )
 
     def __str__(self):
         return f"{self.given_name} {self.surname}"
@@ -48,6 +52,7 @@ class Job(models.Model):
     required_caregiving_type = models.CharField(max_length=255)
     other_requirements = models.TextField()
     date_posted = models.DateField()
+    is_open = models.BooleanField(default=True)
 
     def __str__(self):
         return f"Job {self.pk} ({self.required_caregiving_type})"
@@ -57,6 +62,11 @@ class JobApplication(models.Model):
     caregiver = models.ForeignKey(Caregiver, on_delete=models.CASCADE)
     job = models.ForeignKey(Job, on_delete=models.CASCADE)
     date_applied = models.DateField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["job", "caregiver"], name="one_application_per_job_caregiver"),
+        ]
 
     def __str__(self):
         return f"Application for Job {self.job.pk} by {self.caregiver.user.given_name}"
@@ -69,6 +79,14 @@ class Appointment(models.Model):
     appointment_time = models.TimeField()
     work_hours = models.IntegerField()
     status = models.CharField(max_length=50)
+    application = models.OneToOneField(
+        JobApplication, null=True, blank=True, on_delete=models.PROTECT,
+    )
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(condition=models.Q(work_hours__gt=0), name="appointment_positive_hours"),
+        ]
 
     def __str__(self):
         return f"Appointment ({self.appointment_date} at {self.appointment_time})"

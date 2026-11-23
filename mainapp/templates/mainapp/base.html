@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Caregiver Board</title>
+<style>
+body { font: 1rem/1.5 system-ui, sans-serif; max-width: 52rem; margin: 2rem auto; padding: 0 1rem; color: #172735; }
+nav { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+article { border: 1px solid #ccd7e0; padding: .6rem 1rem; margin-bottom: .5rem; }
+button, input, textarea { font: inherit; }
+</style></head>
+<body>
+<nav>
+<a href="{% url 'index' %}">Job board</a>
+{% if user.is_authenticated %}
+<span>Signed in as {{ user.username }}</span>
+<form method="post" action="{% url 'logout' %}">{% csrf_token %}<button>Sign out</button></form>
+{% else %}<a href="{% url 'login' %}">Sign in</a>{% endif %}
+{% if user.is_staff %}<a href="{% url 'admin:index' %}">Admin</a>{% endif %}
+</nav>
+{% for message in messages %}<p role="status">{{ message }}</p>{% endfor %}
+<main>{% block content %}{% endblock %}</main>
+</body></html>

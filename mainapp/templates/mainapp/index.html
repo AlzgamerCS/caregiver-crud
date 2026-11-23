@@ -1,0 +1,29 @@
+{% extends "mainapp/base.html" %}
+{% block content %}
+<h1>Caregiver job board</h1>
+{% if member %}<p><a href="{% url 'create_job' %}">Post a job</a></p>{% endif %}
+<h2>Open jobs</h2>
+{% for job in jobs %}
+<article>
+<h3>{{ job.required_caregiving_type }}</h3>
+<p>{{ job.other_requirements }}</p>
+{% if caregiver %}
+<form method="post" action="{% url 'apply' job.pk %}">{% csrf_token %}<button>Apply</button></form>
+{% endif %}
+</article>
+{% empty %}<p>No open jobs.</p>{% endfor %}
+{% if member %}
+<h2>Applications for your open jobs</h2>
+<ul>{% for application in applications %}
+<li>{{ application }} · <a href="{% url 'accept' application.pk %}">Schedule appointment</a></li>
+{% empty %}<li>No pending applications.</li>{% endfor %}</ul>
+<h2>Your job report</h2>
+<ul>{% for job in job_report %}
+<li>{{ job }} · {{ job.applicants }} application{{ job.applicants|pluralize }} · {{ job.is_open|yesno:"Open,Closed" }}</li>
+{% empty %}<li>No jobs yet.</li>{% endfor %}</ul>
+<h2>Your accepted appointments</h2>
+<ul>{% for appointment in appointments %}
+<li>{{ appointment.caregiver.user }} · {{ appointment.appointment_date }} at {{ appointment.appointment_time }} · {{ appointment.work_hours }} hours</li>
+{% empty %}<li>No appointments yet.</li>{% endfor %}</ul>
+{% endif %}
+{% endblock %}
