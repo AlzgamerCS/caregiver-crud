@@ -1,8 +1,17 @@
 # Caregiver job board and ORM lab
 
-This project started as coursework for CSCI 341 Database Systems at Nazarbayev University. A member posts a job, a caregiver applies, and the member accepts the application and schedules an appointment. An applicant-count report demonstrates a join and aggregation.
+I built the original caregiver database for CSCI 341 Database Systems at Nazarbayev University. I later turned it into two demos so readers can compare how Django ORM and SQLAlchemy handle the same workflow. A member posts a job, a caregiver applies, and the member accepts an application and schedules an appointment. Both demos include an applicant-count report.
 
-Each implementation has its own models, database connection, dependencies, and entry point. Run either one independently.
+## What to explore
+
+| Start here | What you'll see |
+| --- | --- |
+| [Django job board](#django-app) | A browser demo with two roles, job applications, appointment scheduling, and a report. |
+| [SQLAlchemy lab](#sqlalchemy-lab) | The same workflow through repository functions and explicit transactions. |
+| [Coursework and solutions](coursework/) | An enhanced ER and UML design, a runnable query exercise, MySQL schema definitions, and SQL reports. |
+| [ORM walkthrough](docs/orm-walkthrough.md) | A comparison of queries, constraints, and transaction boundaries in both implementations. |
+
+The original assignments are under `coursework/`. The two later implementations can run independently. Each has its own models, dependencies, database connection, and entry point.
 
 | | Django app | SQLAlchemy lab |
 | --- | --- | --- |
